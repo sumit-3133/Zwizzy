@@ -12,9 +12,35 @@ import connectDB from './config/db.js';
 const app = express()
 const port = 4000
 
-// middleware
-app.use(express.json())
-app.use(cors())
+// server/app.js (or index.js)
+const express = require('express');
+const cors = require('cors');
+const app = express();
+
+const allowedOrigin = process.env.ALLOWED_ORIGIN || 'https://zwizzy-frontend.onrender.com';
+
+// A robust CORS config that allows preflight and credentials if needed
+const corsOptions = {
+  origin: function(origin, callback) {
+    // allow requests with no origin (e.g., curl, mobile apps)
+    if (!origin) return callback(null, true);
+    if (Array.isArray(allowedOrigin) ? allowedOrigin.includes(origin) : origin === allowedOrigin) {
+      callback(null, true);
+    } else {
+      callback(new Error('CORS policy: This origin is not allowed'));
+    }
+  },
+  methods: ['GET','HEAD','PUT','PATCH','POST','DELETE','OPTIONS'],
+  allowedHeaders: ['Content-Type','Authorization','Accept'],
+  credentials: true, // set true if you use cookies/auth with credentials
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+
+// Ensure Express replies to preflight OPTIONS for all routes
+app.options('*', cors(corsOptions));
+app.use(express.json());
 
 //db connection
 connectDB();
