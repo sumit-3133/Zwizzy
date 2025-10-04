@@ -12,11 +12,6 @@ import connectDB from './config/db.js';
 const app = express()
 const port = 4000
 
-// server/app.js (or index.js)
-const express = require('express');
-const cors = require('cors');
-const app = express();
-
 const allowedOrigin = process.env.ALLOWED_ORIGIN || 'https://zwizzy-frontend.onrender.com';
 
 // A robust CORS config that allows preflight and credentials if needed
